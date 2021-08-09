@@ -50,4 +50,20 @@ module('Integration | Helper | set', function(hooks) {
 
     assert.dom('[data-test-name]').hasText('Bob');
   });
+
+  test('it doesn\'t transform a set helper invocation that\'s already of the form (set target "key")', async function(assert) {
+    await render(hbs`
+      <span data-test-greeting>{{this.greeting}}</span>
+
+      <button {{on "click" (set this "greeting" "Hello!")}}>
+        English
+      </button>
+    `);
+
+    assert.equal(find('[data-test-greeting]').textContent.trim(), '');
+
+    await click('button');
+
+    assert.equal(find('[data-test-greeting]').textContent.trim(), 'Hello!');
+  });
 });
